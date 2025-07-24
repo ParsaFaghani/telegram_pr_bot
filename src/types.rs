@@ -30,5 +30,30 @@ pub struct Chat {
 pub struct SendMessageParams {
     pub chat_id: i64,
     pub text: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub parse_mode: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reply_markup: Option<InlineKeyboardMarkup>,
+}
+
+
+#[derive(Debug, Serialize)]
+pub struct InlineKeyboardButton {
+    pub text: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub callback_data: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub url: Option<String>,
+}
+
+#[derive(Debug, Serialize)]
+pub struct InlineKeyboardMarkup {
+    pub inline_keyboard: Vec<Vec<InlineKeyboardButton>>,
+}
+
+#[derive(Debug, Serialize)]
+pub struct answerCallbackQuery {
+    pub callback_query_id: i64,
+    pub text: String,
+    pub show_text: bool,
 }

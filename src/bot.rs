@@ -16,12 +16,15 @@ impl TelegramBot {
         }
     }
 
-    pub async fn send_message(&self, chat_id: i64, text: &str) -> Result<Message, BotError> {
+    
+    pub async fn send_message(&self,chat_id: i64,text: &str,keyboard: Option<InlineKeyboardMarkup>,) -> Result<Message, BotError> {
         let url = format!("https://api.telegram.org/bot{}/sendMessage", self.token);
+
         let payload = SendMessageParams {
             chat_id,
             text: text.to_string(),
             parse_mode: None,
+            reply_markup: keyboard,
         };
 
         let res = self.client.post(&url)
@@ -33,6 +36,7 @@ impl TelegramBot {
         let msg = res.json::<TelegramResponse<Message>>().await?;
         Ok(msg.result)
     }
+
 
     pub async fn get_updates(&self, offset: Option<i64>) -> Result<Vec<Update>, BotError> {
         let url = format!("https://api.telegram.org/bot{}/getUpdates", self.token);
