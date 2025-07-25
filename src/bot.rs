@@ -54,4 +54,25 @@ impl TelegramBot {
         let updates = res.json::<TelegramResponse<Vec<Update>>>().await?;
         Ok(updates.result)
     }
+
+    pub async fn answer_callback_query(&self,callback_query_id: &str,text: Option<&str>, show_alert: Option<bool>,) -> Result<(), BotError> {
+            let url = format!("https://api.telegram.org/bot{}/answerCallbackQuery", self.token);
+            let payload = AnswerCallbackQuery {
+                callback_query_id: callback_query_id.to_string(),
+                text: text.map(|s| s.to_string()),
+                show_alert: Some(show_alert.unwrap_or(false)),
+                cache_time: None,
+                url: None,
+            };
+
+            let res = self.client
+                .post(&url)
+                .json(&payload)
+                .send()
+                .await?
+                .error_for_status()?;
+
+            println!("status: {}", res.status());
+            Ok(())
+    }
 }

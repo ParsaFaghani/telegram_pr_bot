@@ -10,6 +10,13 @@ pub struct TelegramResponse<T> {
 pub struct Update {
     pub update_id: i64,
     pub message: Option<Message>,
+    pub callback_query: Option<CallbackQuery>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct CallbackQuery {
+    pub id : String,
+    pub data: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -51,9 +58,15 @@ pub struct InlineKeyboardMarkup {
     pub inline_keyboard: Vec<Vec<InlineKeyboardButton>>,
 }
 
-#[derive(Debug, Serialize)]
-pub struct answerCallbackQuery {
-    pub callback_query_id: i64,
-    pub text: String,
-    pub show_text: bool,
+#[derive(Serialize)]
+pub struct AnswerCallbackQuery {
+    pub callback_query_id: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub text: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub show_alert: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub url: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub cache_time: Option<u32>,
 }
